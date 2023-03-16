@@ -5,7 +5,6 @@ import com.myjavaapp.myapp.models.Student;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +12,7 @@ import java.util.UUID;
 
 @Service
 public class StudentService {
+    // catch ile fırlat
     @Autowired
     private  final StudentDao studentDao;
 
@@ -31,8 +31,8 @@ public class StudentService {
     public int updateStudent(Student student) {
         Optional<Student> studentOptional=getStudent(student.getId());
         if(studentOptional.isPresent()){
-              this.studentDao.updateStudent(student);
-              return  1;
+            this.studentDao.updateStudent(student);
+            return  1;
         }
         return  -1;
     }
@@ -40,7 +40,7 @@ public class StudentService {
     public int removeStudent(UUID uuid) {
         Optional<Student> studentOptional=getStudent(uuid);
         if(studentOptional.isPresent()){
-              this.studentDao.removeStudent(uuid);
+            this.studentDao.removeStudent(uuid);
             return  1;
         }
         return  -1;
@@ -48,10 +48,10 @@ public class StudentService {
 
     public int createStudent(@Valid Student student) {
         try {
-           return this.studentDao.createStudent(student);
+            return this.studentDao.createStudent(student);
         }catch (Exception e){
             System.out.print("qweqweqw");
-                throw  e;
+            throw  e;
         }
     }
 }

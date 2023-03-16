@@ -1,16 +1,20 @@
 package com.myjavaapp.myapp.controllers;
 
 
+import com.myjavaapp.myapp.anotation.ImageValidator;
+import com.myjavaapp.myapp.anotation.NameValidator;
 import com.myjavaapp.myapp.models.Student;
 import com.myjavaapp.myapp.service.StudentService;
+import com.myjavaapp.myapp.service.imp.FileStorageService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -18,22 +22,23 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/student")
 public class StudentController {
-
     @Autowired
     private StudentService studentService;
+    @Autowired
+    FileStorageService storageService;
     public StudentController(StudentService service) {
         this.studentService=service;
     }
 
     @GetMapping("/getAll")
-    public List<Student> GetAllStudents (){
+    public List<Student> getAllStudents (){
         return this.studentService.getAllStudents();
     }
 
     @GetMapping("/getStudent/{id}")
-    public  Optional<Student> getStudentById (@PathVariable(value = "id") UUID studentId){
+    public  Student getStudentById (@PathVariable(value = "id") UUID studentId){
         System.out.print(studentId);
-        return this.studentService.getStudent(studentId);
+        return this.studentService.getStudent(studentId).orElse(null);
     }
 
     @PostMapping(value = "/createStudent",consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -82,14 +87,22 @@ public class StudentController {
         var list=this.studentService.getAllStudents();
         var filteredList2=list.stream().filter(student -> student.getFirstName().equals("yasin")).collect(Collectors.toList());
         var filteredList=list.stream().filter(student -> {
-           return student.getFirstName().equals("yasin");
+            return student.getFirstName().equals("yasin");
         }).collect(Collectors.toList());
         return  filteredList;
     }
+
+    @PostMapping(value = "/fileUpload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    //@Valid @RequestPart("data") Student student,
+    public  String createStudentWithFile( @ImageValidator @RequestPart("file") MultipartFile file
+    ){
+        return "qq";
+    }
+
+
 
     @PostMapping(value = "/jacksonpost")
     public  void JacksonData(){
 
     }
 }
-
