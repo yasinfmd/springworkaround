@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/student")
+@Validated
 public class StudentController {
     @Autowired
     private StudentService studentService;
@@ -94,7 +96,7 @@ public class StudentController {
 
     @PostMapping(value = "/fileUpload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     //@Valid @RequestPart("data") Student student,
-    public  String createStudentWithFile( @ImageValidator @RequestPart("file") MultipartFile file
+    public  String createStudentWithFile(@ImageValidator @RequestPart("file") MultipartFile file
     ){
         return "qq";
     }
