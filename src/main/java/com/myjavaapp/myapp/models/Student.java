@@ -1,11 +1,14 @@
 package com.myjavaapp.myapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "student")
@@ -14,7 +17,7 @@ public class Student {
     @Override
     public String toString() {
         return "Student{" +
-                "studentId=" + studentId +
+                "id=" + id +
                 ", firstName='" + studentName + '\'' +
                 ", lastName='" + studentLastName + '\'' +
                 ", gender=" + gender +
@@ -25,11 +28,12 @@ public class Student {
 
 
 
-    @Id
-    @Column(name = "student_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private int studentId;
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(name = "student_name")
     @NotNull(message = "Null olamaz")
@@ -43,7 +47,7 @@ public class Student {
 
     @Column(name = "student_gender")
     @NotNull(message = "Null olamaz")
-    private String gender;
+    private Gender gender;
 
 
     @Column(name = "student_age")
@@ -69,12 +73,25 @@ public class Student {
     }
 
 
+    public StudentDetail getStudentDetail() {
+        return studentDetail;
+    }
+
+    public void setStudentDetail(StudentDetail studentDetail) {
+        this.studentDetail = studentDetail;
+    }
+
+    @JsonIgnore
+    @OneToOne(cascade =CascadeType.ALL  ,fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_detail_id", referencedColumnName = "id")
+    private StudentDetail studentDetail;
+
     public Student() {
 
     }
 
-    public Student(int studentId, String studentName, String studentLastName, String gender, Integer age, String email) {
-        this.studentId = studentId;
+    public Student(UUID id, String studentName, String studentLastName, Gender gender, Integer age, String email) {
+        this.id = id;
         this.studentName = studentName;
         this.studentLastName = studentLastName;
         this.gender = gender;
@@ -82,12 +99,12 @@ public class Student {
         this.email = email;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public UUID getId() {
+        return id;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getStudentName() {
@@ -106,11 +123,11 @@ public class Student {
         this.studentLastName = studentLastName;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

@@ -10,8 +10,9 @@ public class CustomException extends Exception {
     private String endpoint;
 
 
-
-
+    public CustomException(String errorMessage) {
+        super(errorMessage);
+    }
 
     public CustomException(String errorMessage, int code, long timestamp) {
         this.errorMessage = errorMessage;
