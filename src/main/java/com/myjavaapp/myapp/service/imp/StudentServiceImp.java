@@ -22,27 +22,24 @@ public class StudentServiceImp implements StudentService {
 
     @Transactional
     public void deneme(){
-        Student employee = new Student();
-        employee.setStudentName("qq");
-        employee.setGender(Student.Gender.MALE);
-        employee.setEmail("qweeq@mail.com");
-        employee.setAge(33);
-        employee.setStudentLastName("q");
+        Student student = new Student();
+        student.setStudentName("qq");
+        student.setGender(Student.Gender.MALE);
+        student.setEmail("qweeq@mail.com");
+        student.setAge(33);
+        student.setStudentLastName("q");
 
-        StudentDetail employeeDetail = new StudentDetail();
-        employeeDetail.setDetailText("detay");
+        StudentDetail studentDetail = new StudentDetail();
+        studentDetail.setDetailText("detay");
 
-        employee.setStudentDetail(employeeDetail);
-        employeeDetail.setStudent(employee);
-        studentRepository.save(employee);
+        student.setStudentDetail(studentDetail);
+        studentDetail.setStudent(student);
+        studentRepository.save(student);
     }
     @Override
     public List<Student> getAll() {
         try{
-            List<Student> studentList = studentRepository.findAll().stream().map(item->{
-                item.setStudentDetail(item.getStudentDetail());
-                return  item;
-            }).collect(Collectors.toList());
+            List<Student> studentList = studentRepository.findAll();
             return  studentList;
         }catch (Exception e){
                 throw  e;

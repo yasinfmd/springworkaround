@@ -73,6 +73,9 @@ public class Student {
     }
 
 
+    @OneToOne(mappedBy = "student",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private StudentDetail studentDetail;
+
     public StudentDetail getStudentDetail() {
         return studentDetail;
     }
@@ -81,10 +84,7 @@ public class Student {
         this.studentDetail = studentDetail;
     }
 
-    @JsonIgnore
-    @OneToOne(cascade =CascadeType.ALL  ,fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_detail_id", referencedColumnName = "id")
-    private StudentDetail studentDetail;
+
 
     public Student() {
 

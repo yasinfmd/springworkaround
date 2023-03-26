@@ -1,5 +1,6 @@
 package com.myjavaapp.myapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -19,8 +20,12 @@ public class StudentDetail {
     private UUID id;
 
 
-    @OneToOne(mappedBy = "studentDetail",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
+
+
 
     public Student getStudent() {
         return student;
