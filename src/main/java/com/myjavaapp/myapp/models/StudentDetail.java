@@ -1,5 +1,6 @@
 package com.myjavaapp.myapp.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -20,7 +21,7 @@ public class StudentDetail {
     private UUID id;
 
 
-    @JsonIgnore
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;

@@ -1,13 +1,15 @@
 package com.myjavaapp.myapp.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -74,7 +76,33 @@ public class Student {
 
 
     @OneToOne(mappedBy = "student",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonManagedReference
     private StudentDetail studentDetail;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    List<Comment> comments = new ArrayList<>();
+
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "student",cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.LAZY)
+    private List<Course> courses=new ArrayList<>();
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public StudentDetail getStudentDetail() {
         return studentDetail;
