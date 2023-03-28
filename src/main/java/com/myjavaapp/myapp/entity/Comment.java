@@ -1,4 +1,4 @@
-package com.myjavaapp.myapp.models;
+package com.myjavaapp.myapp.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -10,14 +10,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "student_comments")
-public class Comment {
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id;
+public class Comment extends BaseEntity {
 
-    @Column(name = "student_comment")
+
+    @Column(name = "comment")
     @NotNull(message = "Null olamaz")
     @NotEmpty(message = "Bir değer giriniz")
     @Size(min = 8,max = 200)
@@ -30,13 +26,6 @@ public class Comment {
         this.comment = comment;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getComment() {
         return comment;

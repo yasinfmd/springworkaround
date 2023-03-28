@@ -1,4 +1,4 @@
-package com.myjavaapp.myapp.models;
+package com.myjavaapp.myapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,14 +13,11 @@ import java.util.UUID;
 @Entity
 @Table(name = "student_detail")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StudentDetail {
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id;
+public class StudentDetail extends BaseEntity {
 
 
+
+    @JsonIgnore
     @JsonBackReference
     @OneToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id")
@@ -36,7 +33,7 @@ public class StudentDetail {
         this.student = student;
     }
 
-    @Column(name = "student_detail_text")
+    @Column(name = "detail")
     @NotNull(message = "Null olamaz")
     @NotEmpty(message = "Bir değer giriniz")
     private String detailText;
@@ -54,16 +51,8 @@ public class StudentDetail {
 
     }
 
-    public UUID getId() {
-        return id;
-    }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public StudentDetail(UUID id, String detailText) {
-        this.id = id;
+    public StudentDetail(String detailText) {
         this.detailText = detailText;
     }
 }

@@ -3,10 +3,12 @@ package com.myjavaapp.myapp.controllers;
 
 import com.myjavaapp.myapp.anotation.ImageValidator;
 import com.myjavaapp.myapp.configs.GeneralConfig;
-import com.myjavaapp.myapp.models.Student;
+import com.myjavaapp.myapp.configs.GlobalResponse;
+import com.myjavaapp.myapp.dtos.BaseResponse;
+import com.myjavaapp.myapp.dtos.request.CreateStudentRequest;
+import com.myjavaapp.myapp.entity.Student;
 import com.myjavaapp.myapp.service.imp.FileStorageService;
 import com.myjavaapp.myapp.service.imp.StudentServiceImp;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,23 +26,29 @@ import java.util.UUID;
 @Validated
 public class StudentController {
     private StudentServiceImp studentService;
-    private FileStorageService storageService;
+   // private FileStorageService storageService;
+
+    private GlobalResponse globalResponse;
 
     private GeneralConfig generalConfig;
 
     @Autowired
-    public StudentController(StudentServiceImp studentService, FileStorageService storageService, GeneralConfig generalConfig) {
-        this.storageService=storageService;
+    public StudentController(StudentServiceImp studentService, GeneralConfig generalConfig,GlobalResponse globalResponse) {
+     //   this.storageService=storageService;
+        // FileStorageService storageService,
         this.studentService = studentService;
         this.generalConfig=generalConfig;
+        this.globalResponse=globalResponse;
         System.out.print(this.generalConfig.getApiPath());
     }
 
     @GetMapping("/")
-    @Transactional
-    public List<Student> getAllStudents() {
-        this.studentService.deneme();
-        return this.studentService.getAll();
+    public ResponseEntity<BaseResponse<List<Student>>> getAllStudents() {
+        globalResponse.getBaseResponse().setData(this.studentService.getAll());
+        globalResponse.getBaseResponse().setCode(200);
+        globalResponse.getBaseResponse().setStatus(true);
+        globalResponse.getBaseResponse().setTime(System.currentTimeMillis());
+        return  ResponseEntity.ok().body(globalResponse.getBaseResponse());
     }
 
     @GetMapping("/{id}")
@@ -50,8 +58,8 @@ public class StudentController {
 
     }
 
-    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> createStudent(@Valid @RequestBody Student student) {
+    @PostMapping(value = "/")
+    public ResponseEntity<Integer> createStudent(@Valid @RequestBody CreateStudentRequest createStudentRequest) {
         return ResponseEntity.badRequest().build();
 
     }

@@ -1,20 +1,22 @@
 package com.myjavaapp.myapp.service.imp;
 
-import com.myjavaapp.myapp.models.Comment;
-import com.myjavaapp.myapp.models.Course;
-import com.myjavaapp.myapp.models.Student;
-import com.myjavaapp.myapp.models.StudentDetail;
+import com.myjavaapp.myapp.dtos.request.CreateStudentRequest;
+import com.myjavaapp.myapp.entity.Comment;
+import com.myjavaapp.myapp.entity.Course;
+import com.myjavaapp.myapp.entity.Student;
+import com.myjavaapp.myapp.entity.StudentDetail;
+import com.myjavaapp.myapp.enums.Gender;
 import com.myjavaapp.myapp.repository.StudentRepository;
 import com.myjavaapp.myapp.service.StudentService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Random;
 
 @Service
+@Transactional
 public class StudentServiceImp implements StudentService {
 
     private final StudentRepository studentRepository;
@@ -23,14 +25,13 @@ public class StudentServiceImp implements StudentService {
         this.studentRepository=studentRepository;
     }
 
-    @Transactional
     public void deneme(){
         Student student = new Student();
-        student.setStudentName("qq");
-        student.setGender(Student.Gender.MALE);
+        student.setName(String.valueOf(new Random().nextInt())+ System.currentTimeMillis() / 1000);
+        student.setGender(Gender.MALE);
         student.setEmail("qweeq@mail.com");
         student.setAge(33);
-        student.setStudentLastName("q");
+        student.setLastName("q");
         Comment c1=new Comment();
         c1.setComment("Merhaba merhaba");
         Comment c2=new Comment();
@@ -47,10 +48,11 @@ public class StudentServiceImp implements StudentService {
 
         student.getComments().add(c1);
         student.getComments().add(c2);
-
+        c11.setStudent(student);
+        c22.setStudent(student);
 
         student.setStudentDetail(studentDetail);
-     //   studentDetail.setStudent(student);
+       studentDetail.setStudent(student);
 
 
         studentRepository.save(student);
@@ -59,6 +61,7 @@ public class StudentServiceImp implements StudentService {
     public List<Student> getAll() {
         try{
             List<Student> studentList = studentRepository.findAll();
+
             return  studentList;
         }catch (Exception e){
                 throw  e;
@@ -67,6 +70,17 @@ public class StudentServiceImp implements StudentService {
 
     @Override
     public Student get(Long studentId) {
+        return null;
+    }
+
+    @Override
+    public Student create(CreateStudentRequest createStudentRequest) {
+        Student student = new Student();
+        student.setName(createStudentRequest.getName());
+        student.setGender(createStudentRequest.getGender());
+        student.setEmail(createStudentRequest.getEmail());
+        student.setAge(createStudentRequest.getAge());
+        student.setLastName(createStudentRequest.getLastName());
         return null;
     }
 }
