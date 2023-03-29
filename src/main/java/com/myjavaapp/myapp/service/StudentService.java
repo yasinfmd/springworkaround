@@ -11,6 +11,6 @@ public interface StudentService {
 
     Student get(Long studentId);
 
-    Student create(CreateStudentRequest createStudentRequest);
+    Student create(CreateStudentRequest student);
 
 }

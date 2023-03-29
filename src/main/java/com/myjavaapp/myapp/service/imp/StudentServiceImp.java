@@ -75,12 +75,12 @@ public class StudentServiceImp implements StudentService {
 
     @Override
     public Student create(CreateStudentRequest createStudentRequest) {
-        Student student = new Student();
+       /* Student student = new Student();
         student.setName(createStudentRequest.getName());
         student.setGender(createStudentRequest.getGender());
         student.setEmail(createStudentRequest.getEmail());
         student.setAge(createStudentRequest.getAge());
-        student.setLastName(createStudentRequest.getLastName());
+        student.setLastName(createStudentRequest.getLastName());*/
         return null;
     }
 }

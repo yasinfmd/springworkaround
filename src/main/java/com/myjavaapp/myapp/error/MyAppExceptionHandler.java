@@ -19,12 +19,19 @@ public class MyAppExceptionHandler {
     public ResponseEntity<Object> getError(MethodArgumentNotValidException exception, WebRequest request) {
         HttpStatusCode statusCode = exception.getStatusCode();
         Map<String, Object> errorResponse = new HashMap<>();
-        List<Map<String, Object>> errorList = new ArrayList<>();
-        Map<String, Object> validationErrors = new HashMap<>();
+        List<Map<String, Set<String>>> errorList = new ArrayList<>();
+
+        Map<String, Set<String>> validationErrors = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach((error) -> {
+            Set<String> errorMessages=new LinkedHashSet<>();
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            validationErrors.put(fieldName, errorMessage);
+            if(validationErrors.get(fieldName) != null){
+                validationErrors.get(fieldName).add(errorMessage);
+            }else{
+                errorMessages.add(errorMessage);
+                validationErrors.put(fieldName,errorMessages);
+            }
         });
         errorList.add(validationErrors);
         errorResponse.put("dateTime", new Date().getTime());
