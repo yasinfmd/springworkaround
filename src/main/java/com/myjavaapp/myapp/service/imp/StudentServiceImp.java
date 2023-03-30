@@ -1,6 +1,7 @@
 package com.myjavaapp.myapp.service.imp;
 
 import com.myjavaapp.myapp.dtos.request.CreateStudentRequest;
+import com.myjavaapp.myapp.dtos.response.StudentDto;
 import com.myjavaapp.myapp.entity.Comment;
 import com.myjavaapp.myapp.entity.Course;
 import com.myjavaapp.myapp.entity.Student;
@@ -74,13 +75,15 @@ public class StudentServiceImp implements StudentService {
     }
 
     @Override
-    public Student create(CreateStudentRequest createStudentRequest) {
-       /* Student student = new Student();
+    public StudentDto create(CreateStudentRequest createStudentRequest) {
+        Student student = new Student();
         student.setName(createStudentRequest.getName());
-        student.setGender(createStudentRequest.getGender());
+        student.setLastName(createStudentRequest.getLastName());
         student.setEmail(createStudentRequest.getEmail());
+        student.setGender(createStudentRequest.getGender());
         student.setAge(createStudentRequest.getAge());
-        student.setLastName(createStudentRequest.getLastName());*/
-        return null;
+        studentRepository.save(student);
+        StudentDto dto=new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(),student.getGender());
+        return   dto;
     }
 }

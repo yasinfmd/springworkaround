@@ -1,10 +1,13 @@
 package com.myjavaapp.myapp.dtos.request;
 
 import com.myjavaapp.myapp.anotation.DateValidator;
+import com.myjavaapp.myapp.anotation.GenderValidator;
 import com.myjavaapp.myapp.enums.Gender;
 import jakarta.validation.constraints.*;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 
 public class CreateStudentRequest {
     @NotNull(message = "Null olamaz")
@@ -18,6 +21,7 @@ public class CreateStudentRequest {
     private String lastName;
 
     @NotNull(message = "Null olamaz")
+    @GenderValidator(message ="FEMALE or MALE")
     private Gender gender;
 
 
@@ -27,19 +31,21 @@ public class CreateStudentRequest {
     @DateValidator(pattern = "dd.mm.yyyy",message = "Geçerli bir tarih formatı giriniz izin verilen format dd.mm.yyyy")
     private String age;
 
-    public String getAge() {
-        return age;
+    public int getAge() {
+        try {
+            Date today=new Date();
+            Date birthDate=new SimpleDateFormat("dd.MM.yyyy").parse(this.age);
+            long time_difference = today.getTime() - birthDate.getTime();
+            return (int)(time_difference / (1000L*60*60*24*365));
+        }catch (Exception e){
+            return  0;
+        }
     }
 
     public void setAge(String age) {
         this.age = age;
     }
 
-    /*    @NotNull(message = "Boş olamaz")
-            @NotEmpty(message = "Bir değer giriniz")
-            @DateTimeFormat(pattern = "dd.MM.yyyy")
-            @Pattern(regexp = "dd.MM.yyyy", message = "Lütfen geçerli bir tarih formatı giriniz")
-            private LocalDate age;*/
     @NotNull(message = "Null olamaz")
     @NotEmpty(message = "Bir değer giriniz")
     @Email(message = "Geçerli bir email giriniz")
@@ -69,19 +75,7 @@ public class CreateStudentRequest {
         this.gender = gender;
     }
 
-/*
-    public Integer getAge() {
-        LocalDate currentDate = LocalDate.now();
-        int diff = Period.between(this.age, currentDate).getYears();
-        return diff;
-    }
 
-    public void setAge(LocalDate age) {
-        LocalDate currentDate = LocalDate.now();
-        int diff = Period.between(age, currentDate).getYears();
-        this.age = age;
-    }
-*/
 
     public String getEmail() {
         return email;

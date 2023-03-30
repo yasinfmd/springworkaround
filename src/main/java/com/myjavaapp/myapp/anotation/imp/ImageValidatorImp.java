@@ -1,5 +1,6 @@
-package com.myjavaapp.myapp.anotation;
+package com.myjavaapp.myapp.anotation.imp;
 
+import com.myjavaapp.myapp.anotation.ImageValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.web.multipart.MultipartFile;

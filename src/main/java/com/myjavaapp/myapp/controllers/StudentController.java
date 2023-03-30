@@ -6,11 +6,12 @@ import com.myjavaapp.myapp.configs.GeneralConfig;
 import com.myjavaapp.myapp.configs.GlobalResponse;
 import com.myjavaapp.myapp.dtos.BaseResponse;
 import com.myjavaapp.myapp.dtos.request.CreateStudentRequest;
-import com.myjavaapp.myapp.dtos.request.CreateUserRequest;
+import com.myjavaapp.myapp.dtos.response.StudentDto;
 import com.myjavaapp.myapp.entity.Student;
 import com.myjavaapp.myapp.service.imp.StudentServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,19 +27,19 @@ import java.util.UUID;
 @Validated
 public class StudentController {
     private StudentServiceImp studentService;
-   // private FileStorageService storageService;
+    // private FileStorageService storageService;
 
     private GlobalResponse globalResponse;
 
     private GeneralConfig generalConfig;
 
     @Autowired
-    public StudentController(StudentServiceImp studentService, GeneralConfig generalConfig,GlobalResponse globalResponse) {
-     //   this.storageService=storageService;
+    public StudentController(StudentServiceImp studentService, GeneralConfig generalConfig, GlobalResponse globalResponse) {
+        //   this.storageService=storageService;
         // FileStorageService storageService,
         this.studentService = studentService;
-        this.generalConfig=generalConfig;
-        this.globalResponse=globalResponse;
+        this.generalConfig = generalConfig;
+        this.globalResponse = globalResponse;
         System.out.print(this.generalConfig.getApiPath());
     }
 
@@ -48,20 +49,25 @@ public class StudentController {
         globalResponse.getBaseResponse().setCode(200);
         globalResponse.getBaseResponse().setStatus(true);
         globalResponse.getBaseResponse().setTime(System.currentTimeMillis());
-        return  ResponseEntity.ok().body(globalResponse.getBaseResponse());
+        return ResponseEntity.ok().body(globalResponse.getBaseResponse());
     }
 
     @GetMapping("/{id}")
     public void getStudentById(@PathVariable(value = "id") UUID studentId) {
         System.out.print(studentId);
-       // return this.studentService.getStudent(studentId).orElse(null);
+        // return this.studentService.getStudent(studentId).orElse(null);
 
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<Integer> createStudent(@Valid @RequestBody CreateStudentRequest createStudentRequest) {
-          //  this.studentService.create(student);
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<BaseResponse<StudentDto>> createStudent(@Valid @RequestBody CreateStudentRequest createStudentRequest) {
+        globalResponse.getBaseResponse().setData(this.studentService.create(createStudentRequest));
+        globalResponse.getBaseResponse().setCode(200);
+        globalResponse.getBaseResponse().setStatus(true);
+        globalResponse.getBaseResponse().setTime(System.currentTimeMillis());
+        return new ResponseEntity<BaseResponse<StudentDto>>(globalResponse.getBaseResponse(), HttpStatus.CREATED);
+
+
 
     }
 
@@ -91,7 +97,6 @@ public class StudentController {
     ) {
         return "qq";
     }
-
 
 
 }
