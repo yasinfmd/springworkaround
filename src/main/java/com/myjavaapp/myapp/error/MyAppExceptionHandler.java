@@ -1,5 +1,6 @@
 package com.myjavaapp.myapp.error;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,15 @@ public class MyAppExceptionHandler {
         errorResponse.put("timeStamp", exception.getTimestamp());
         errorResponse.put("path", exception.getEndpoint());
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), exception.getCode());
+    }
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFoundError(Exception exception, WebRequest request) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("message", exception.getMessage());
+        errorResponse.put("code", 404);
+        errorResponse.put("timeStamp", new Date().getTime());
+        errorResponse.put("path", request.getDescription(false));
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), 404);
     }
 
     @ExceptionHandler

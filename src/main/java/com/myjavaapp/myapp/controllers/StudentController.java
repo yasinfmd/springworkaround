@@ -53,10 +53,12 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public void getStudentById(@PathVariable(value = "id") UUID studentId) {
-        System.out.print(studentId);
-        // return this.studentService.getStudent(studentId).orElse(null);
-
+    public  ResponseEntity<BaseResponse<StudentDto>> getStudentById(@PathVariable(value = "id") UUID studentId) {
+        globalResponse.getBaseResponse().setData(this.studentService.get(studentId));
+        globalResponse.getBaseResponse().setCode(200);
+        globalResponse.getBaseResponse().setStatus(true);
+        globalResponse.getBaseResponse().setTime(System.currentTimeMillis());
+        return new ResponseEntity<BaseResponse<StudentDto>>(globalResponse.getBaseResponse(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/")
@@ -66,15 +68,16 @@ public class StudentController {
         globalResponse.getBaseResponse().setStatus(true);
         globalResponse.getBaseResponse().setTime(System.currentTimeMillis());
         return new ResponseEntity<BaseResponse<StudentDto>>(globalResponse.getBaseResponse(), HttpStatus.CREATED);
-
-
-
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Integer> deleteStudent(@PathVariable(value = "id") UUID studentId) {
-        return ResponseEntity.ok().build();
-
+    public ResponseEntity<BaseResponse<Boolean>>deleteStudent(@PathVariable(value = "id") UUID studentId) {
+        this.studentService.delete(studentId);
+        globalResponse.getBaseResponse().setData(true);
+        globalResponse.getBaseResponse().setCode(200);
+        globalResponse.getBaseResponse().setStatus(true);
+        globalResponse.getBaseResponse().setTime(System.currentTimeMillis());
+        return new ResponseEntity<>(globalResponse.getBaseResponse(), HttpStatus.OK);
 
     }
 
