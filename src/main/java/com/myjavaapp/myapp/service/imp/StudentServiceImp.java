@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class StudentServiceImp implements StudentService {
 
     private final StudentRepository studentRepository;
@@ -30,6 +29,7 @@ public class StudentServiceImp implements StudentService {
         this.studentRepository = studentRepository;
     }
 
+    @Transactional
     public void deneme() {
         Student student = new Student();
         student.setName(String.valueOf(new Random().nextInt()) + System.currentTimeMillis() / 1000);
@@ -73,6 +73,28 @@ public class StudentServiceImp implements StudentService {
             throw e;
         }
     }
+    public  void getStudentsByName(){
+        try {
+            var a=  this.studentRepository.findStudentByName("Y");
+            var d=20;
+
+        }catch (Exception e){
+            System.out.print("q");
+            throw  e;
+        }
+    }
+
+    public  void getStudentsByAge(){
+        try {
+          var a=  this.studentRepository.findByAge(27);
+            var d=20;
+
+        }catch (Exception e){
+            System.out.print("q");
+            throw  e;
+        }
+    }
+
 
     @Override
     public StudentDto get(UUID studentId) {
@@ -98,12 +120,17 @@ public class StudentServiceImp implements StudentService {
 
     @Override
     public StudentDto create(CreateStudentRequest createStudentRequest) {
+        Random random = new Random();
+        int age= random.ints(20, 30)
+                .findFirst()
+                .getAsInt();
         Student student = new Student();
         student.setName(createStudentRequest.getName());
         student.setLastName(createStudentRequest.getLastName());
         student.setEmail(createStudentRequest.getEmail());
         student.setGender(createStudentRequest.getGender());
-        student.setAge(createStudentRequest.getAge());
+        //createStudentRequest.getAge()
+        student.setAge(age);
         studentRepository.save(student);
         StudentDto dto = new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(), student.getGender());
         return dto;

@@ -82,10 +82,19 @@ public class StudentController {
     }
 
 
+
+
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateStudent(@PathVariable(value = "id") UUID studentId, @RequestBody Student student) {
         return ResponseEntity.ok().build();
 
+    }
+
+    @GetMapping("/getByAge")
+    public String getByAge (){
+        this.studentService.getStudentsByName();
+      //  this.studentService.getStudentsByAge();
+        return "";
     }
 
     @GetMapping("/getByQuery")

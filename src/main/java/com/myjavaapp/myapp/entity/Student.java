@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "student")
+@Table(name = "Student")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Student extends BaseEntity {
     @Column(name = "name")
