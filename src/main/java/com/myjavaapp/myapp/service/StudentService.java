@@ -2,6 +2,7 @@ package com.myjavaapp.myapp.service;
 
 import com.myjavaapp.myapp.dtos.request.CreateStudentRequest;
 import com.myjavaapp.myapp.dtos.request.StudentDetailRequest;
+import com.myjavaapp.myapp.dtos.response.StudentDetailDto;
 import com.myjavaapp.myapp.dtos.response.StudentDto;
 import com.myjavaapp.myapp.entity.Student;
 import com.myjavaapp.myapp.error.CustomException;
@@ -24,5 +25,7 @@ public interface StudentService {
     Boolean update(UUID studentId,CreateStudentRequest student);
 
     Boolean createStudentDetail(UUID studentId, StudentDetailRequest detail);
+
+    StudentDetailDto getStudentDetail(UUID studentId);
 
 }

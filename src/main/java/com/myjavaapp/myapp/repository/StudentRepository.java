@@ -11,19 +11,6 @@ import java.util.UUID;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, UUID> {
-/*        @Query("SELECT s FROM student u WHERE s.age = ?1")
-        List<Student> findStudentByAge(Integer age);*/
-
-/*        @Query("SELECT s FROM student u WHERE s.age = ?1")
-        List<Student> findStudentByAge(int age);*/
-
-   /*     @Query(value = "SELECT s FROM student s WHERE  s.age = :age",nativeQuery = true)
-        Student findByAge(@Param("age") Integer age);*/
-
-
-/*        @Query(value = "SELECT s FROM Student s WHERE s.name='test'",nativeQuery = true)
-        List<Student> findStudentByAge(@Param("name") String name);*/
-
         @Query("FROM Student WHERE age = ?1")
         List<Student> findByAge(Integer age);
 

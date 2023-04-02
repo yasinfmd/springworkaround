@@ -2,6 +2,7 @@ package com.myjavaapp.myapp.service.imp;
 
 import com.myjavaapp.myapp.dtos.request.CreateStudentRequest;
 import com.myjavaapp.myapp.dtos.request.StudentDetailRequest;
+import com.myjavaapp.myapp.dtos.response.StudentDetailDto;
 import com.myjavaapp.myapp.dtos.response.StudentDto;
 import com.myjavaapp.myapp.entity.Comment;
 import com.myjavaapp.myapp.entity.Course;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,6 +65,7 @@ public class StudentServiceImp implements StudentService {
 
         studentRepository.save(student);
     }
+
 
     @Override
     public List<StudentDto> getAll() {
@@ -133,19 +134,26 @@ public class StudentServiceImp implements StudentService {
     @Override
     @Transactional
     public Boolean createStudentDetail(UUID studentId, StudentDetailRequest detail) {
-        try {
-            Student student = studentRepository.findById(studentId).orElse(null);
-            if (student == null) {
-                throw new EntityNotFoundException("Kayıt bulunamadı");
-            }
-            StudentDetail studentDetail = new StudentDetail();
-            studentDetail.setDetailText(detail.getDetail());
-            student.setStudentDetail(studentDetail);
-            studentDetail.setStudent(student);
-            studentRepository.save(student);
-            return true;
-        } catch (Exception e) {
-            throw e;
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            throw new EntityNotFoundException("Kayıt bulunamadı");
         }
+        StudentDetail studentDetail = new StudentDetail();
+        studentDetail.setDetailText(detail.getDetail());
+        student.setStudentDetail(studentDetail);
+        studentDetail.setStudent(student);
+        studentRepository.save(student);
+        return true;
+
+    }
+
+    @Override
+    public StudentDetailDto getStudentDetail(UUID studentId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            throw new EntityNotFoundException("Kayıt bulunamadı");
+        }
+        StudentDetail detail = student.getStudentDetail();
+        return new StudentDetailDto(detail.getId(), detail.getDetailText());
     }
 }

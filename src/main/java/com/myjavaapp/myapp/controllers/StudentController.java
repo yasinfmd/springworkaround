@@ -23,7 +23,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/api/student")
+@RequestMapping("student")
 @Validated
 public class StudentController {
     private StudentServiceImp studentService;
@@ -104,6 +104,16 @@ public class StudentController {
         globalResponse.getBaseResponse().setTime(System.currentTimeMillis());
         return new ResponseEntity<>(globalResponse.getBaseResponse(), HttpStatus.OK);
     }
+    @GetMapping(value = "/{id}/detail")
+    public ResponseEntity<BaseResponse<Boolean>>  getStudentDetail(@PathVariable(value = "id") UUID studentId){
+        this.studentService.getStudentDetail(studentId);
+        globalResponse.getBaseResponse().setData(true);
+        globalResponse.getBaseResponse().setCode(200);
+        globalResponse.getBaseResponse().setStatus(true);
+        globalResponse.getBaseResponse().setTime(System.currentTimeMillis());
+        return new ResponseEntity<>(globalResponse.getBaseResponse(), HttpStatus.OK);
+    }
+
 
 
     @PostMapping(value = "/{id}/detail")
