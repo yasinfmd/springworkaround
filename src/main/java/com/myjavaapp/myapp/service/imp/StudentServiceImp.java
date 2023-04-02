@@ -1,12 +1,14 @@
 package com.myjavaapp.myapp.service.imp;
 
 import com.myjavaapp.myapp.dtos.request.CreateStudentRequest;
+import com.myjavaapp.myapp.dtos.request.StudentDetailRequest;
 import com.myjavaapp.myapp.dtos.response.StudentDto;
 import com.myjavaapp.myapp.entity.Comment;
 import com.myjavaapp.myapp.entity.Course;
 import com.myjavaapp.myapp.entity.Student;
 import com.myjavaapp.myapp.entity.StudentDetail;
 import com.myjavaapp.myapp.enums.Gender;
+import com.myjavaapp.myapp.error.CustomException;
 import com.myjavaapp.myapp.repository.StudentRepository;
 import com.myjavaapp.myapp.service.StudentService;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImp implements StudentService {
@@ -64,47 +67,29 @@ public class StudentServiceImp implements StudentService {
     }
 
     @Override
-    public List<Student> getAll() {
-        try {
-            List<Student> studentList = studentRepository.findAll();
+    public List<StudentDto> getAll() {
+        List<Student> students = studentRepository.findAll();
+        return students.stream().map((student) -> new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(), student.getGender())).collect(Collectors.toList());
 
-            return studentList;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-    public  void getStudentsByName(){
-        try {
-            var a=  this.studentRepository.findStudentByName("Y");
-            var d=20;
-
-        }catch (Exception e){
-            System.out.print("q");
-            throw  e;
-        }
     }
 
-    public  void getStudentsByAge(){
-        try {
-          var a=  this.studentRepository.findByAge(27);
-            var d=20;
+    public List<StudentDto> getStudentsByName(String name) {
+        List<Student> students = this.studentRepository.findStudentByName(name);
+        return students.stream().map((student) -> new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(), student.getGender())).collect(Collectors.toList());
+    }
 
-        }catch (Exception e){
-            System.out.print("q");
-            throw  e;
-        }
+    public List<StudentDto> getStudentsByAge(int age) {
+        List<Student> students = this.studentRepository.findByAge(age);
+        return students.stream().map((student) -> new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(), student.getGender())).collect(Collectors.toList());
+
     }
 
 
     @Override
     public StudentDto get(UUID studentId) {
-        try {
-            Student student = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException("Kayıt bulunamadı"));
-            StudentDto dto = new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(), student.getGender());
-            return dto;
-        } catch (Exception e) {
-            throw e;
-        }
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException("Kayıt bulunamadı"));
+        return new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(), student.getGender());
+
 
     }
 
@@ -120,19 +105,47 @@ public class StudentServiceImp implements StudentService {
 
     @Override
     public StudentDto create(CreateStudentRequest createStudentRequest) {
-        Random random = new Random();
-        int age= random.ints(20, 30)
-                .findFirst()
-                .getAsInt();
         Student student = new Student();
         student.setName(createStudentRequest.getName());
         student.setLastName(createStudentRequest.getLastName());
         student.setEmail(createStudentRequest.getEmail());
         student.setGender(createStudentRequest.getGender());
-        //createStudentRequest.getAge()
-        student.setAge(age);
+        student.setAge(createStudentRequest.getAge());
         studentRepository.save(student);
-        StudentDto dto = new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(), student.getGender());
-        return dto;
+        return new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(), student.getGender());
+    }
+
+    @Override
+    public Boolean update(UUID studentId, CreateStudentRequest updateStudent) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            throw new EntityNotFoundException("Kayıt bulunamadı");
+        }
+        student.setName(updateStudent.getName());
+        student.setLastName(updateStudent.getLastName());
+        student.setEmail(updateStudent.getEmail());
+        student.setGender(updateStudent.getGender());
+        student.setAge(updateStudent.getAge());
+        studentRepository.save(student);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public Boolean createStudentDetail(UUID studentId, StudentDetailRequest detail) {
+        try {
+            Student student = studentRepository.findById(studentId).orElse(null);
+            if (student == null) {
+                throw new EntityNotFoundException("Kayıt bulunamadı");
+            }
+            StudentDetail studentDetail = new StudentDetail();
+            studentDetail.setDetailText(detail.getDetail());
+            student.setStudentDetail(studentDetail);
+            studentDetail.setStudent(student);
+            studentRepository.save(student);
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }
