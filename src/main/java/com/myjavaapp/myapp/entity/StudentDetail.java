@@ -19,7 +19,7 @@ public class StudentDetail extends BaseEntity {
 
     @JsonIgnore
     @JsonBackReference
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
 

@@ -9,7 +9,6 @@ import com.myjavaapp.myapp.entity.Course;
 import com.myjavaapp.myapp.entity.Student;
 import com.myjavaapp.myapp.entity.StudentDetail;
 import com.myjavaapp.myapp.enums.Gender;
-import com.myjavaapp.myapp.error.CustomException;
 import com.myjavaapp.myapp.repository.StudentRepository;
 import com.myjavaapp.myapp.service.StudentService;
 import jakarta.persistence.EntityNotFoundException;
@@ -89,6 +88,7 @@ public class StudentServiceImp implements StudentService {
     @Override
     public StudentDto get(UUID studentId) {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException("Kayıt bulunamadı"));
+        student.getComments().get(0);
         return new StudentDto(student.getId(), student.getName() + " " + student.getLastName(), student.getEmail(), student.getAge(), student.getGender());
 
 

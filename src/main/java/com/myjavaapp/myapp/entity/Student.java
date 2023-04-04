@@ -50,7 +50,7 @@ public class Student extends BaseEntity {
     }
 
     @JsonIgnore
-    @OneToOne(mappedBy = "student",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "student",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true,optional = true)
     @JsonManagedReference
     private StudentDetail studentDetail;
 

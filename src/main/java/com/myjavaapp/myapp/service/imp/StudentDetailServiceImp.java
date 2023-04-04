@@ -1,5 +1,6 @@
 package com.myjavaapp.myapp.service.imp;
 
+import com.myjavaapp.myapp.entity.Student;
 import com.myjavaapp.myapp.entity.StudentDetail;
 import com.myjavaapp.myapp.repository.StudentDetailRepository;
 import com.myjavaapp.myapp.service.StudentDetailService;
@@ -21,11 +22,14 @@ public class StudentDetailServiceImp implements StudentDetailService {
 
     @Override
     public Boolean delete(UUID detailId) {
-        StudentDetail studentDetail=this.studentDetailRepository.findById(detailId).orElse(null);
-        if(studentDetail == null){
-            throw  new EntityNotFoundException("Kayıt bulunamadı");
+        StudentDetail studentDetail = this.studentDetailRepository.findById(detailId).orElse(null);
+        if (studentDetail == null) {
+            throw new EntityNotFoundException("Kayıt bulunamadı");
         }
-        studentDetailRepository.delete(studentDetail);
+        Student s = studentDetail.getStudent();
+        s.setStudentDetail(null);
+        studentDetail.setStudent(null);
+        this.studentDetailRepository.deleteById(detailId);
         return true;
     }
 }
